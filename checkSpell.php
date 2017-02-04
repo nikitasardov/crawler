@@ -1,7 +1,15 @@
 <?php
+ini_set('log_errors', 'On');
+ini_set('error_log', './php_errors.log');
 function getUrls ($siteAddr) {
     global $argv;
+    echo PHP_EOL,"=====================================================";
+    echo PHP_EOL."checkspell gets sitemap.xml from $argv[1]:";
+    echo PHP_EOL,"=====================================================";
     $sitemap = file_get_contents($siteAddr.'/sitemap.xml');
+    if ($sitemap == false) {
+        return false;
+    }
     echo $sitemap;
     $sitemap = explode("\n", strip_tags($sitemap));
     foreach ($sitemap as $s) {
@@ -19,6 +27,9 @@ function getUrls ($siteAddr) {
 
 function spellCheck ($urls) {
     global $argv;
+    echo PHP_EOL,"=====================================================";
+    echo PHP_EOL."start checking found urls:";
+    echo PHP_EOL,"=====================================================";
     $n = 0;
     $c = count($urls);
     $errurls = 0;
@@ -100,15 +111,14 @@ function addrAllowed($u) {
 
 system('clear');
 
-echo PHP_EOL,"=====================================================";
-echo PHP_EOL."checkspell gets sitemap.xml from $argv[1]:";
-echo PHP_EOL,"=====================================================";
-
 $urls = getUrls($argv[1]);
-
-echo PHP_EOL,"=====================================================";
-echo PHP_EOL."start checking found urls:";
-echo PHP_EOL,"=====================================================";
-
-spellCheck ($urls);
+if ($urls == false) {
+    echo PHP_EOL."=====================================================";
+    echo PHP_EOL."ERROR! no $argv[1]/sitemap.xml found";
+    echo PHP_EOL."=====================================================";
+    echo PHP_EOL."spellcheck stopped";
+    echo PHP_EOL.PHP_EOL;
+} else {
+    spellCheck ($urls);
+}
 ?>
