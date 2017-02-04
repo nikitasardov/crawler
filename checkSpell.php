@@ -891,6 +891,7 @@ foreach ($text as $t) {
     }
 }
 $c = count($urls);
+shell_exec('clear');
 echo $c.' урлов в обнаружено'.PHP_EOL;
 //shell_exec('LOGFILE=result.txt');
 //shell_exec('exec 6>&1');         //  # Связать дескр. #6 со stdout.
@@ -898,18 +899,21 @@ echo $c.' урлов в обнаружено'.PHP_EOL;
 //shell_exec('exec > $LOGFILE');
 $n = 0;
 $yaresult = '';
+$resultFile =  $argv[1];
 foreach ($urls as $u) {
         $n++;
    //     shell_exec('touch result.txt');
   //      shell_exec('exec >result.txt');
         echo '-----'.PHP_EOL;
         echo "$n из $c: $u".PHP_EOL;
-      //  $yaresult += `yaspeller $u`;
+        `yaspeller $u 2>&1 | tee -a $resultFile`;
         //$yaresult = $yaresult.PHP_EOL;
     //$output = `ls -al`;
     //echo "<pre>$output</pre>";
 }
-echo PHP_EOL,"THE END";
+echo PHP_EOL,"Results saved in $resultFile here: ";
+echo `pwd`;
+echo PHP_EOL,"spellCheck completed";
 echo PHP_EOL;
 //echo $yaresult;
 //shell_exec('exec 1>&6 &6>&-');
