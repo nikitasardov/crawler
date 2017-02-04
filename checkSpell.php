@@ -11,7 +11,9 @@ function getUrls ($siteAddr) {
     }
     $c = count($urls);
     shell_exec('clear');
-    echo $c.' urls found'.PHP_EOL;
+    echo PHP_EOL.PHP_EOL."===============================";
+    echo PHP_EOL.$c.' urls found';
+    echo PHP_EOL."===============================".PHP_EOL;
     return $urls;
 }
 
@@ -19,8 +21,11 @@ function spellCheck ($urls) {
     global $argv;
     $n = 0;
     $c = count($urls);
-    $resultFile =  'r__'.$argv[2];
+    $errurls = 0;
     $rdir = prepareFName($argv[1]);
+    if (isset($argv[2])) {
+        $logFile = $argv[2];
+    } else $logFile =  'log__'.$rdir.'.txt';
     echo PHP_EOL;
     `mkdir $rdir`;
     foreach ($urls as $u) {
@@ -29,23 +34,27 @@ function spellCheck ($urls) {
         echo "$n из $c: $u".PHP_EOL;
 
         if (addrAllowed($u) == false) {
-            echo PHP_EOL.'Address skipped: '.$u.PHP_EOL;
+            echo PHP_EOL.'Address skipped: '.$u.PHP_EOL.PHP_EOL.PHP_EOL;
+            $errurls++;
             continue;
         } else {
             //echo PHP_EOL.'Address ok: '.$u.PHP_EOL;
         }
 
-        `yaspeller --report console,html --find-repeat-words --ignore-latin $u 2>&1 | tee -a $rdir/$resultFile`;
+        `yaspeller --report console,html --find-repeat-words --ignore-latin $u 2>&1 | tee -a $rdir/$logFile`;
         $nn = prepareFName($u);
         $fn = "$rdir/yasp_$nn.html";
         `mv yaspeller_report.html $fn`;
     }
-    $raddr = `pwd`;
-    echo PHP_EOL,"Results saved in $raddr/$rdir/";
-    echo PHP_EOL,"===============================";
-    echo PHP_EOL,"spellCheck completed";
-    echo PHP_EOL,"===============================";
+    echo PHP_EOL."===============================";
+    echo PHP_EOL."spellcheck of $argv[1] completed";
+    echo PHP_EOL."===============================";
     echo PHP_EOL;
+    echo PHP_EOL."Urls found in $argv[1]/sitemap.xml: $c";
+    echo PHP_EOL."Error urls skipped: $errurls";
+    echo PHP_EOL."Results saved in folder ./$rdir/";
+    echo PHP_EOL . "Log file is here ./$rdir/$logFile";
+    echo PHP_EOL.PHP_EOL;
 }
 
 function prepareFName($u) {
