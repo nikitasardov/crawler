@@ -11,7 +11,7 @@ function getUrls ($siteAddr) {
     }
     $c = count($urls);
     shell_exec('clear');
-    echo $c.' урлов в обнаружено'.PHP_EOL;
+    echo $c.' urls found'.PHP_EOL;
     return $urls;
 }
 
@@ -21,6 +21,7 @@ function spellCheck ($urls) {
     $c = count($urls);
     $resultFile =  'r__'.$argv[2];
     $rdir = prepareFName($argv[1]);
+    echo PHP_EOL;
     `mkdir $rdir`;
     foreach ($urls as $u) {
         $n++;
@@ -41,7 +42,9 @@ function spellCheck ($urls) {
     }
     $raddr = `pwd`;
     echo PHP_EOL,"Results saved in $raddr/$rdir/";
+    echo PHP_EOL,"===============================";
     echo PHP_EOL,"spellCheck completed";
+    echo PHP_EOL,"===============================";
     echo PHP_EOL;
 }
 
@@ -86,6 +89,17 @@ function addrAllowed($u) {
     }
 }
 
+system('clear');
+
+echo PHP_EOL,"=====================================================";
+echo PHP_EOL."checkspell gets sitemap.xml from $argv[1]:";
+echo PHP_EOL,"=====================================================";
+
 $urls = getUrls($argv[1]);
+
+echo PHP_EOL,"=====================================================";
+echo PHP_EOL."start checking found urls:";
+echo PHP_EOL,"=====================================================";
+
 spellCheck ($urls);
 ?>
