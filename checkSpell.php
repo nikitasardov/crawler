@@ -31,7 +31,7 @@ function spellCheck ($urls) {
             echo PHP_EOL.'Address skipped: '.$u.PHP_EOL;
             continue;
         } else {
-            echo PHP_EOL.'Address ok: '.$u.PHP_EOL;
+            //echo PHP_EOL.'Address ok: '.$u.PHP_EOL;
         }
 
         `yaspeller --report console,html --find-repeat-words --ignore-latin $u 2>&1 | tee -a $rdir/$resultFile`;
@@ -81,7 +81,7 @@ function addrAllowed($u) {
         }
         }
     if ($err == 0) {
-        echo PHP_EOL."ADDR OK, error extensions not found in: ".$u;
+        //echo PHP_EOL."ADDR OK, error extensions not found in: ".$u;
         return true;
     }
 }
