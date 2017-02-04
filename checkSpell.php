@@ -26,20 +26,64 @@ function spellCheck ($urls) {
         $n++;
         echo '-----'.PHP_EOL;
         echo "$n из $c: $u".PHP_EOL;
-        `yaspeller --report console,html,custom_report --find-repeat-words $u 2>&1 | tee -a $rdir/$resultFile`;
+
+        if (addrAllowed($u) == false) {
+            echo PHP_EOL.'Address skipped: '.$u.PHP_EOL;
+            continue;
+        } else {
+            echo PHP_EOL.'Address ok: '.$u.PHP_EOL;
+        }
+
+        `yaspeller --report console,html --find-repeat-words --ignore-latin $u 2>&1 | tee -a $rdir/$resultFile`;
         $nn = prepareFName($u);
         $fn = "$rdir/yasp_$nn.html";
         `mv yaspeller_report.html $fn`;
     }
-    echo PHP_EOL,"Results saved in $rdir/ here: ";
-    echo `pwd`;
+    $raddr = `pwd`;
+    echo PHP_EOL,"Results saved in $raddr/$rdir/";
     echo PHP_EOL,"spellCheck completed";
     echo PHP_EOL;
 }
 
 function prepareFName($u) {
-    $repl = array('/https:\/\//','/http:\/\//','/\//','/\./');
+    $repl = array(
+        '/https:\/\//',
+        '/http:\/\//',
+        '/\//',
+        '/\./');
     return trim(preg_replace($repl, "_", $u));
+}
+
+function addrAllowed($u) {
+    $ext = array (
+        '.zip',
+        '.jpg',
+        '.png',
+        '.gif',
+        '.doc',
+        '.docx',
+        '.pdf'
+    );
+    $err = 0;
+    $errstr = '';
+    foreach ($ext as $e) {
+        global $errstr;
+        if (strpos($u,$e) > 0) {
+            $err = 1;
+            $errstr = $e;
+        } else {
+            $err = 0;
+            $errstr = '';
+        }
+        if ($err == 1) {
+            echo PHP_EOL."BAD ADDR, $errstr found in: ".$u;
+            return false;
+        }
+        }
+    if ($err == 0) {
+        echo PHP_EOL."ADDR OK, error extensions not found in: ".$u;
+        return true;
+    }
 }
 
 $urls = getUrls($argv[1]);
