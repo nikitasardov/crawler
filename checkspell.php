@@ -201,7 +201,7 @@ function checkSites($sitelist) {
         echo PHP_EOL . "=====================================================";
         echo PHP_EOL.PHP_EOL;
     }
-    echo PHP_EOL . "Log file is here ./$rdir/$logFile";
+    echo PHP_EOL . "Log file is here .results/$rdir/$logFile";
     echo PHP_EOL.PHP_EOL;
 }
 
