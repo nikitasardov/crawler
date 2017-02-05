@@ -31,11 +31,11 @@ function getSitePages ($siteAddr) {
     echo PHP_EOL."=====================================================";
     echo PHP_EOL."checkspell gets sitemap.xml from $siteAddr:";
     echo PHP_EOL."=====================================================";
-    $sitemap = file_get_contents($siteAddr.'/sitemap.xml');
+    $sitemap = file_get_contents($siteAddr/*.'/sitemap.xml'*/);
     if ($sitemap == false) {
         return false;
     }
- //   echo PHP_EOL.$sitemap;
+    echo PHP_EOL.$sitemap;
     $sitemap = explode("\n", strip_tags($sitemap));
     foreach ($sitemap as $s) {
         if (strpos(trim($s),'http') !== false) {
@@ -154,7 +154,7 @@ function checkSite($siteurl) {
     $sUrl = $siteurl;
     $urls = getSitePages($siteurl);
     mkResultsDir();
-    if ($urls == false) {
+    /*if ($urls == false) {
         echo PHP_EOL . "=====================================================";
         echo PHP_EOL . "ERROR! no $siteurl/sitemap.xml found";
         echo PHP_EOL . "=====================================================";
@@ -167,7 +167,7 @@ function checkSite($siteurl) {
         `echo "ERROR! sitemap.xml not found in $siteurl" >> results/$rdir/$logFile`;
     } else {
         spellCheck($urls);
-    }
+    }*/
 }
 
 function checkSites($sitelist) {
@@ -230,7 +230,7 @@ if (!isset($argv[1])) {
     echo PHP_EOL . PHP_EOL;
     die;
 }
-
+/*
 if (isset($argv[3])&&$argv[3] == '-m') {
     $m = 1; //check a more than 1 site
     echo '$m = '.$m;
@@ -238,5 +238,6 @@ if (isset($argv[3])&&$argv[3] == '-m') {
 } else {
     $m = 0; //check just 1 site
     checkSite($argv[1]);
-}
+}*/
+checkSite($argv[1]);
 ?>
